@@ -4,6 +4,7 @@
  */
 package main;
 
+
 /**
  *
  * @author Maqrok
@@ -17,7 +18,6 @@ public class MainWindow extends javax.swing.JFrame {
         initComponents();
         
         // Configuración de la ventana principal
-        setSize(450, 400); // Tamaño fijo
         setResizable(false); // No redimensionable
         setLocationRelativeTo(null); // Centrar la ventana en la pantalla
         getContentPane().setLayout(null); // Cambiar a null layout para usar coordenadas fijas
@@ -46,6 +46,11 @@ public class MainWindow extends javax.swing.JFrame {
         IconLabel.setText("jLabel1");
 
         LoginBtn.setText("LOGIN");
+        LoginBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                LoginBtnActionPerformed(evt);
+            }
+        });
 
         LinkLabel.setText("www.pokegym.com");
 
@@ -88,6 +93,12 @@ public class MainWindow extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void LoginBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LoginBtnActionPerformed
+        // TODO add your handling code here:
+        LoginDialog loginDialog = new LoginDialog(this, true);
+        loginDialog.setVisible(true);
+    }//GEN-LAST:event_LoginBtnActionPerformed
 
     /**
      * @param args the command line arguments
