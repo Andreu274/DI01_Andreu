@@ -39,6 +39,8 @@ public class MainWindow extends javax.swing.JFrame {
         LoginBtn = new javax.swing.JButton();
         LinkLabel = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
+        RegistreBtn = new javax.swing.JButton();
+        jLabel2 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -56,6 +58,15 @@ public class MainWindow extends javax.swing.JFrame {
 
         jLabel1.setText("POKEGYM");
 
+        RegistreBtn.setText("Register");
+        RegistreBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                RegistreBtnActionPerformed(evt);
+            }
+        });
+
+        jLabel2.setText("Don't have account?");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -65,17 +76,24 @@ public class MainWindow extends javax.swing.JFrame {
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(119, 119, 119))
             .addGroup(layout.createSequentialGroup()
+                .addGap(120, 120, 120)
+                .addComponent(IconLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(130, Short.MAX_VALUE))
+            .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(LinkLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(120, 120, 120)
-                        .addComponent(IconLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
                         .addGap(175, 175, 175)
                         .addComponent(LoginBtn)))
-                .addContainerGap(130, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jLabel2)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(6, 6, 6)
+                        .addComponent(RegistreBtn)))
+                .addGap(24, 24, 24))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -85,9 +103,16 @@ public class MainWindow extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(IconLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 218, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(LoginBtn)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 28, Short.MAX_VALUE)
-                .addComponent(LinkLabel)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(LoginBtn)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 28, Short.MAX_VALUE)
+                        .addComponent(LinkLabel))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jLabel2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(RegistreBtn)))
                 .addGap(51, 51, 51))
         );
 
@@ -99,6 +124,12 @@ public class MainWindow extends javax.swing.JFrame {
         LoginDialog loginDialog = new LoginDialog(this, true);
         loginDialog.setVisible(true);
     }//GEN-LAST:event_LoginBtnActionPerformed
+
+    private void RegistreBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RegistreBtnActionPerformed
+        // TODO add your handling code here:
+        RegisterDialog registerDialog = new RegisterDialog(this, true);
+        registerDialog.setVisible(true);
+    }//GEN-LAST:event_RegistreBtnActionPerformed
 
     /**
      * @param args the command line arguments
@@ -139,6 +170,8 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JLabel IconLabel;
     private javax.swing.JLabel LinkLabel;
     private javax.swing.JButton LoginBtn;
+    private javax.swing.JButton RegistreBtn;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     // End of variables declaration//GEN-END:variables
 }

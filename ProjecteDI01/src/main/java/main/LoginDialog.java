@@ -4,14 +4,14 @@
  */
 package main;
 
+
 import java.awt.Frame;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
+import at.favre.lib.crypto.bcrypt.BCrypt;
+import DataAcces.Usuari;
+import DataAcces.DataAcces;
 
 /**
  *
@@ -19,6 +19,7 @@ import javax.swing.SwingUtilities;
  */
 public class LoginDialog extends javax.swing.JDialog {
 
+    private DataAcces da = new DataAcces();
     /**
      * Creates new form Login
      */
@@ -68,8 +69,8 @@ public class LoginDialog extends javax.swing.JDialog {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(29, 29, 29)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(Loginbutton)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(Loginbutton, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(PswLabel)
@@ -88,71 +89,41 @@ public class LoginDialog extends javax.swing.JDialog {
                 .addComponent(Icono, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(30, 30, 30)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(EmailLabel)
-                    .addComponent(EmailText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(39, 39, 39)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(PswLabel)
-                    .addComponent(PswText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(32, 32, 32)
-                .addComponent(Loginbutton)
-                .addContainerGap(36, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(EmailLabel)
+                            .addComponent(EmailText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(PswLabel)
+                            .addComponent(PswText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(49, 49, 49))
+                    .addComponent(Loginbutton))
+                .addContainerGap(63, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    public Connection getConnection() {
-        Connection connection = null;
-        try {
-            // Conexión a la base de datos MySQL
-            connection = DriverManager.getConnection("jdbc:sqlserver://localhost;database=simulapdb;", "usuario", "contraseña");
-        } catch (Exception e) {
-            e.printStackTrace();
-            JOptionPane.showMessageDialog(null, "Error de conexión con la base de datos");
-        }
-        return connection;
-    }
-    
-    public boolean verificarUsuario(String email, String contraseña) {
-        Connection connection = getConnection();
-        boolean existe = false;
-        try {
-            // Sentencia SQL para verificar usuario y contraseña
-            String query = "SELECT * FROM usuaris WHERE Email = ? AND PasswordHash = ?";
-            PreparedStatement ps = connection.prepareStatement(query);
-            ps.setString(1, email);
-            ps.setString(2, contraseña);
-
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                existe = true; // El email y contraseña coinciden
-            }
-            rs.close();
-            ps.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-            JOptionPane.showMessageDialog(null, "Error al consultar la base de datos");
-        } finally {
-            try {
-                if (connection != null) connection.close();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        return existe;
-    }
-    
+        
     private void LoginbuttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LoginbuttonActionPerformed
         // TODO add your handling code here:
-        String email = EmailText.getText();
-        String contraseña = new String(PswText.getPassword());
-        
-        if (verificarUsuario(email, contraseña)) {
-            JOptionPane.showMessageDialog(this, "Login exitoso");
-            dispose(); // Cierra el diálogo
-        } else {
-            JOptionPane.showMessageDialog(this, "Usuario o contraseña incorrectos");
+        Usuari usuari = da.getUsuari(EmailText.getText());
+        if (usuari != null){
+            // Comporbar password
+            char[] passwordtoverify = PswText.getPassword();
+            String UserPasswordHashInDatabase = usuari.getPasswordHash();
+            var result = BCrypt.verifyer().verify(passwordtoverify, UserPasswordHashInDatabase);
+            if(usuari.isInstructor()){
+                if(result.verified){
+                    JOptionPane.showMessageDialog(this, "Login correcte. Benvingut " + usuari.getNom() + "!");
+                } else {
+                    JOptionPane.showMessageDialog(this, "Error: Contrasenya incorrecta");
+                }
+            } else{
+                JOptionPane.showMessageDialog(this, "Error: Usuari no autoritzat");
+            }
+        } else{
+            JOptionPane.showMessageDialog(this, "Error: Usuari incorrecte o inexistent");
         }
     }//GEN-LAST:event_LoginbuttonActionPerformed
 
