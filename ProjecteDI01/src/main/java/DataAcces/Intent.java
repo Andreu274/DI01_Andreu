@@ -17,6 +17,7 @@ public class Intent {
     private Date TimestampInici;
     private Date TimestampFi;
     private String Videofile;
+    private String exerciseName;
 
     public int getId() {
         return Id;
@@ -67,6 +68,15 @@ public class Intent {
     public void setVideofile(String Videofile) {
         this.Videofile = Videofile;
     }
+
+    public String getExerciseName() {
+        return exerciseName;
+    }
+
+    public void setExerciseName(String exerciseName) {
+        this.exerciseName = exerciseName;
+    }
+    
     
     
 }

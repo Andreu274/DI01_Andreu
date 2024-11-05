@@ -164,7 +164,13 @@ public class DataAcces {
 
     public ArrayList<Intent> getPendingAttempts() {
         ArrayList<Intent> pendingAttempts = new ArrayList<>();
-        String sql = "SELECT * FROM Intents WHERE Id NOT IN (SELECT IdIntent FROM Review) ORDER BY TImestamp_Inici DESC";
+        String sql = """
+            SELECT i.Id, i.IdUsuari, i.IdExercici, i.Timestamp_Inici, i.Timestamp_Fi, i.Videofile, e.NomExercici
+            FROM Intents i
+            JOIN Exercicis e ON i.IdExercici = e.Id
+            WHERE i.Id NOT IN (SELECT IdIntent FROM Review)
+            ORDER BY i.Timestamp_Inici DESC
+        """;
 
         Connection connection = getConnection();
         try {
@@ -176,9 +182,10 @@ public class DataAcces {
                 intent.setId(resultSet.getInt("Id"));
                 intent.setIdUsuari(resultSet.getInt("IdUsuari"));
                 intent.setIdExercici(resultSet.getInt("IdExercici"));
-                intent.setTimestampInici(resultSet.getDate("TImestamp_Inici"));
-                intent.setTimestampFi(resultSet.getDate("TImestamp_Fi"));
-                intent.setVideofile(resultSet.getString("Videofile"));  // Obtener como String
+                intent.setTimestampInici(resultSet.getDate("Timestamp_Inici"));
+                intent.setTimestampFi(resultSet.getDate("Timestamp_Fi"));
+                intent.setVideofile(resultSet.getString("Videofile"));
+                intent.setExerciseName(resultSet.getString("NomExercici")); // Nuevo: añadir el nombre del ejercicio
                 pendingAttempts.add(intent);
             }
 
@@ -190,6 +197,7 @@ public class DataAcces {
 
         return pendingAttempts;
     }
+
 
 
     

@@ -92,9 +92,9 @@
     <Component class="javax.swing.JTextField" name="EmailText">
     </Component>
     <Component class="javax.swing.JPasswordField" name="PswText">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="jPasswordField1"/>
-      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="PswTextActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JButton" name="Loginbutton">
       <Properties>

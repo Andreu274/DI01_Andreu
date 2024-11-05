@@ -18,13 +18,17 @@ import DataAcces.DataAcces;
  * @author Maqrok
  */
 public class LoginDialog extends javax.swing.JDialog {
-
+    
+    private JFrame parentFrame;
+    
     private DataAcces da = new DataAcces();
     /**
      * Creates new form Login
+     * @param parent
      */
-    public LoginDialog(Frame parent, boolean modal) {
+    public LoginDialog(JFrame parent, boolean modal) {
         super(parent, modal);
+        this.parentFrame = parent;
         initComponents();
         setLocationRelativeTo(parent);
     }
@@ -54,7 +58,11 @@ public class LoginDialog extends javax.swing.JDialog {
 
         PswLabel.setText("Password");
 
-        PswText.setText("jPasswordField1");
+        PswText.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                PswTextActionPerformed(evt);
+            }
+        });
 
         Loginbutton.setText("Login");
         Loginbutton.addActionListener(new java.awt.event.ActionListener() {
@@ -107,6 +115,7 @@ public class LoginDialog extends javax.swing.JDialog {
         
     private void LoginbuttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LoginbuttonActionPerformed
         // TODO add your handling code here:
+        
         Usuari usuari = da.getUsuari(EmailText.getText());
         if (usuari != null){
             // Comporbar password
@@ -116,6 +125,12 @@ public class LoginDialog extends javax.swing.JDialog {
             if(usuari.isInstructor()){
                 if(result.verified){
                     JOptionPane.showMessageDialog(this, "Login correcte. Benvingut " + usuari.getNom() + "!");
+                    
+                    Intents intentsFrame = new Intents(); 
+                    intentsFrame.setVisible(true);        
+                    
+                    this.dispose();
+                    parentFrame.dispose();
                 } else {
                     JOptionPane.showMessageDialog(this, "Error: Contrasenya incorrecta");
                 }
@@ -126,6 +141,10 @@ public class LoginDialog extends javax.swing.JDialog {
             JOptionPane.showMessageDialog(this, "Error: Usuari incorrecte o inexistent");
         }
     }//GEN-LAST:event_LoginbuttonActionPerformed
+
+    private void PswTextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PswTextActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_PswTextActionPerformed
 
     /**
      * @param args the command line arguments
