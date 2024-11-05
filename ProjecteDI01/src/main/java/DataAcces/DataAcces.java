@@ -114,6 +114,8 @@ public class DataAcces {
         return 0;
     }
     
+    
+    
     public int getLastInsertedUserId(){
         String sql = "SELECT MAX(Id) FROM usuaris";
         int UserId = 0;
@@ -135,8 +137,7 @@ public class DataAcces {
         return UserId;
     }
     
-    public int updateNomUsuari(int userId, String newNom)
-    {
+    public int updateNomUsuari(int userId, String newNom){
 
         String sql = "UPDATE Usuaris SET Nom = ? WHERE Id = ?";
         Connection connection = getConnection();
@@ -158,4 +159,6 @@ public class DataAcces {
         }
         return 0;
     }
+    
+    
 }
