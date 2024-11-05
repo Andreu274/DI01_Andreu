@@ -160,5 +160,38 @@ public class DataAcces {
         return 0;
     }
     
+
+
+    public ArrayList<Intent> getPendingAttempts() {
+        ArrayList<Intent> pendingAttempts = new ArrayList<>();
+        String sql = "SELECT * FROM Intents WHERE Id NOT IN (SELECT IdIntent FROM Review) ORDER BY TImestamp_Inici DESC";
+
+        Connection connection = getConnection();
+        try {
+            PreparedStatement statement = connection.prepareStatement(sql);
+            ResultSet resultSet = statement.executeQuery();
+
+            while (resultSet.next()) {
+                Intent intent = new Intent();
+                intent.setId(resultSet.getInt("Id"));
+                intent.setIdUsuari(resultSet.getInt("IdUsuari"));
+                intent.setIdExercici(resultSet.getInt("IdExercici"));
+                intent.setTimestampInici(resultSet.getDate("TImestamp_Inici"));
+                intent.setTimestampFi(resultSet.getDate("TImestamp_Fi"));
+                intent.setVideofile(resultSet.getString("Videofile"));  // Obtener como String
+                pendingAttempts.add(intent);
+            }
+
+            statement.close();
+            connection.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(DataAcces.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return pendingAttempts;
+    }
+
+
+    
     
 }

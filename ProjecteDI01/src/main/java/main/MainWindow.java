@@ -5,7 +5,7 @@
 package main;
 
 
-import javax.swing.UIManager;
+
 
 
 /**
@@ -134,6 +134,7 @@ public class MainWindow extends javax.swing.JFrame {
         registerDialog.setVisible(true);
     }//GEN-LAST:event_RegistreBtnActionPerformed
 
+    
     
     /**
      * @param args the command line arguments
