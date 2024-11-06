@@ -5,6 +5,7 @@
 package main;
 
 
+import Intents.Intents;
 import java.awt.Frame;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;

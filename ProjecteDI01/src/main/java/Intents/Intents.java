@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-package main;
+package Intents;
 
 import DataAcces.DataAcces;
 import DataAcces.Intent;
@@ -39,14 +39,16 @@ public class Intents extends javax.swing.JFrame {
     
     private void loadPendingIntents() {
         var getPendingAttempts = da.getPendingAttempts(); // Obtener intentos sin revisión
-        DefaultListModel<String> listModel = new DefaultListModel<>();
+        DefaultListModel<Intent> listModel = new DefaultListModel<>();
 
         // Añadir cada intento a la lista con el nombre del ejercicio y el archivo de video
         for (Intent intent : getPendingAttempts) {
-            listModel.addElement(intent.getVideofile());
+            listModel.addElement(intent);
         }
 
         lstVideos.setModel(listModel);
+        
+        lstVideos.setSelectedIndex(0);
     }
 
 
@@ -66,11 +68,6 @@ public class Intents extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        lstVideos.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
-        });
         lstVideos.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
             public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
                 lstVideosValueChanged(evt);
@@ -118,20 +115,8 @@ public class Intents extends javax.swing.JFrame {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
-
-    private void lstVideosValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_lstVideosValueChanged
-       if(evt.getValueIsAdjusting())
-       {
-           return;
-       }
-       String videoPath = "src/main/resources/videos/videos/";
-       String videoFileAbsolutePath = videoPath + "\\" + lstVideos.getSelectedValue();
-       File videoFile = new File(videoFileAbsolutePath); 
-       mediaPlayer.mediaPlayer().media().play(videoFile.getAbsolutePath());
-       isPlaying = true;
-       
-    }//GEN-LAST:event_lstVideosValueChanged
 
     private void btnPauseResumeVideoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPauseResumeVideoActionPerformed
         // TODO add your handling code here:
@@ -149,6 +134,20 @@ public class Intents extends javax.swing.JFrame {
           btnPauseResumeVideo.setText("Pause");
         }
     }//GEN-LAST:event_btnPauseResumeVideoActionPerformed
+
+    private void lstVideosValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_lstVideosValueChanged
+        if(evt.getValueIsAdjusting())
+        {
+            return;
+        }
+        String videoPath = "src/main/resources/videos/videos/";
+        String videoFileAbsolutePath = videoPath + "\\" + lstVideos.getSelectedValue().getVideofile();
+        File videoFile = new File(videoFileAbsolutePath);
+        mediaPlayer.mediaPlayer().media().play(videoFile.getAbsolutePath());
+        mediaPlayer.mediaPlayer().controls().setRepeat(true);
+        isPlaying = true;
+
+    }//GEN-LAST:event_lstVideosValueChanged
 
     /**
      * @param args the command line arguments
@@ -189,7 +188,7 @@ public class Intents extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnPauseResumeVideo;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JList<String> lstVideos;
+    private javax.swing.JList<Intent> lstVideos;
     private javax.swing.JPanel pnlVideoPlayer;
     // End of variables declaration//GEN-END:variables
 }

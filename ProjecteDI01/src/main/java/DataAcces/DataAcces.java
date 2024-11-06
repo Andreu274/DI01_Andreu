@@ -165,11 +165,7 @@ public class DataAcces {
     public ArrayList<Intent> getPendingAttempts() {
         ArrayList<Intent> pendingAttempts = new ArrayList<>();
         String sql = """
-            SELECT i.Id, i.IdUsuari, i.IdExercici, i.Timestamp_Inici, i.Timestamp_Fi, i.Videofile, e.NomExercici
-            FROM Intents i
-            JOIN Exercicis e ON i.IdExercici = e.Id
-            WHERE i.Id NOT IN (SELECT IdIntent FROM Review)
-            ORDER BY i.Timestamp_Inici DESC
+            SELECT Intents.* FROM Intents LEFT JOIN Review ON Review.Id = Intents.Id WHERE Review.Id IS NULL ORDER BY Intents.Timestamp_Inici;
         """;
 
         Connection connection = getConnection();
@@ -185,7 +181,6 @@ public class DataAcces {
                 intent.setTimestampInici(resultSet.getDate("Timestamp_Inici"));
                 intent.setTimestampFi(resultSet.getDate("Timestamp_Fi"));
                 intent.setVideofile(resultSet.getString("Videofile"));
-                intent.setExerciseName(resultSet.getString("NomExercici")); // Nuevo: añadir el nombre del ejercicio
                 pendingAttempts.add(intent);
             }
 

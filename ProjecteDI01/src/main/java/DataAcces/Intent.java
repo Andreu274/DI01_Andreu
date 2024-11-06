@@ -59,8 +59,6 @@ public class Intent {
         this.TimestampFi = TimestampFi;
     }
 
-    
-
     public String getVideofile() {
         return Videofile;
     }
@@ -77,6 +75,9 @@ public class Intent {
         this.exerciseName = exerciseName;
     }
     
-    
+    @Override
+    public String toString(){
+        return String.valueOf(Id);
+    }
     
 }
