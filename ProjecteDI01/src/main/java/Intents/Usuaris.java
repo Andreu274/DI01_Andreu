@@ -4,20 +4,102 @@
  */
 package Intents;
 
+import DataAcces.DataAcces;
+import DataAcces.Usuari;
+import DataAcces.Intent;
+import java.awt.BorderLayout;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
+import javax.swing.DefaultListModel;
+import javax.swing.JFileChooser;
+import javax.swing.table.DefaultTableModel;
+import uk.co.caprica.vlcj.player.component.EmbeddedMediaPlayerComponent;
+
 /**
  *
- * @author Maqrok
+ * @author rgtav
  */
 public class Usuaris extends javax.swing.JFrame {
 
+    
+    private EmbeddedMediaPlayerComponent mediaPlayer;
+    JFileChooser fileChooser = new JFileChooser();
+    private DataAcces da = new DataAcces();
+    private boolean isPlaying = false;
     /**
-     * Creates new form Usuaris
+     * Creates new form MainJFrame
      */
     public Usuaris() {
-        initComponents();
-        setResizable(false); 
-        setLocationRelativeTo(null);
+        setResizable(false); // No redimensionable
+        setLocationRelativeTo(null); // Centrar la ventana en la pantalla
         getContentPane().setLayout(null);
+        initComponents();
+        mediaPlayer = new EmbeddedMediaPlayerComponent();
+        pnlVideoPlayer.add(mediaPlayer, BorderLayout.CENTER);
+        loadUsers();
+        addTableSelectionListener();
+    }
+    
+    // Mètode per carregar usuaris en la llista
+    private void loadUsers() {
+        ArrayList<Usuari> users = da.getAllUsers();
+        DefaultListModel<Usuari> listModel = new DefaultListModel<>();
+
+        for (Usuari user : users) {
+            listModel.addElement(user);
+        }
+
+        lstUsuaris.setModel(listModel);
+        lstUsuaris.setSelectedIndex(0); 
+    }
+
+
+    private void loadUserAttempts(Usuari selectedUser) {
+        ArrayList<Intent> attempts = da.getAllAttemptsForUser(selectedUser.getId());
+
+        // Crear el formateador de fecha
+        SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+        // Model per a la taula amb les columnes requerides (ID, Nom Exercici, TimestampInici)
+        DefaultTableModel tableModel = new DefaultTableModel(new Object[]{"ID", "Nom Exercici", "TimestampInici"}, 0);
+
+        for (Intent intent : attempts) {
+            String formattedDate = dateFormatter.format(intent.getTimestampInici()); 
+            // Añadir los datos a la tabla sin incluir el nombre del video
+            tableModel.addRow(new Object[]{intent.getId(), intent.getExerciseName(), formattedDate});
+        }
+
+        jTable1.setModel(tableModel);
+
+        // Seleccionar y cargar el primer intento si existe
+        if (!attempts.isEmpty()) {
+            String videoFile = attempts.get(0).getVideofile();
+            loadVideo(videoFile);  // Cargar el primer video automáticamente
+            jTable1.setRowSelectionInterval(0, 0);  // Seleccionar el primer intento
+        }
+    }
+
+
+    
+    // Mètode per carregar i reproduir un vídeo
+    private void loadVideo(String videoFileName) {
+        String videoPath = "src/main/resources/videos/videos/";
+        String videoFileAbsolutePath = videoPath + videoFileName;
+        mediaPlayer.mediaPlayer().media().play(videoFileAbsolutePath);
+        mediaPlayer.mediaPlayer().controls().setRepeat(true);
+        isPlaying = true;
+        
+    }
+    
+    // Esdeveniment per seleccionar un usuari i carregar els seus intents
+    private void lstUsuarisValueChanged(javax.swing.event.ListSelectionEvent evt) {
+        if (!evt.getValueIsAdjusting()) {
+            Usuari selectedUser = lstUsuaris.getSelectedValue();
+            if (selectedUser != null) {
+                loadUserAttempts(selectedUser); // Carregar intents de l'usuari seleccionat
+            }
+        }
     }
 
     /**
@@ -29,21 +111,132 @@ public class Usuaris extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        pnlVideoPlayer = new javax.swing.JPanel();
+        btnPauseResumeVideo = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        lstUsuaris = new javax.swing.JList<>();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        jTable1 = new javax.swing.JTable();
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        pnlVideoPlayer.setBorder(javax.swing.BorderFactory.createTitledBorder("Video Player - xxx.mp4"));
+        pnlVideoPlayer.setLayout(new java.awt.BorderLayout());
+
+        btnPauseResumeVideo.setText("Pause");
+        btnPauseResumeVideo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPauseResumeVideoActionPerformed(evt);
+            }
+        });
+
+        jScrollPane1.setViewportView(lstUsuaris);
+        lstUsuaris.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                lstUsuarisValueChanged(evt);
+            }
+        });
+
+        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null},
+                {null, null, null},
+                {null, null, null},
+                {null, null, null}
+            },
+            new String [] {
+                "Id Intent", "Nom exercici", "Fecha"
+            }
+        ));
+        jScrollPane2.setViewportView(jTable1);
+        if (jTable1.getColumnModel().getColumnCount() > 0) {
+            jTable1.getColumnModel().getColumn(2).setResizable(false);
+        }
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 535, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(32, 32, 32)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 236, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(btnPauseResumeVideo)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(pnlVideoPlayer, javax.swing.GroupLayout.PREFERRED_SIZE, 426, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 438, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(21, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 395, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(448, 448, 448)
+                .addComponent(btnPauseResumeVideo))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(37, 37, 37)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 383, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 39, Short.MAX_VALUE)
+                        .addComponent(pnlVideoPlayer, javax.swing.GroupLayout.PREFERRED_SIZE, 322, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(20, 20, 20))))
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnPauseResumeVideoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPauseResumeVideoActionPerformed
+        // TODO add your handling code here:
+        
+        if(isPlaying)
+        {
+            mediaPlayer.mediaPlayer().controls().pause();
+            isPlaying = false;
+            btnPauseResumeVideo.setText("Resume");
+        }
+        else 
+        {
+          mediaPlayer.mediaPlayer().controls().start();
+          isPlaying = true;
+          btnPauseResumeVideo.setText("Pause");
+        }
+    }//GEN-LAST:event_btnPauseResumeVideoActionPerformed
+
+    private void addTableSelectionListener() {
+        jTable1.getSelectionModel().addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            @Override
+            public void valueChanged(javax.swing.event.ListSelectionEvent event) {
+                if (!event.getValueIsAdjusting()) {
+                    int selectedRow = jTable1.getSelectedRow();
+                    if (selectedRow >= 0) {
+                        // Obtener el ID del intento desde la tabla (columna 0)
+                        int attemptId = (Integer) jTable1.getValueAt(selectedRow, 0);  // Obtenemos el ID del intento
+
+                        // Recuperamos el intento completo a partir de su ID
+                        Intent selectedIntent = da.getAttemptById(attemptId);  // Método que debería devolver un único intento
+
+                        // Si el intento es válido, cargar el video correspondiente
+                        if (selectedIntent != null) {
+                            String videoFile = selectedIntent.getVideofile();  // Obtener el nombre del archivo de video
+                            loadVideo(videoFile);  // Cargar el video en el reproductor
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+
+
+
+
+
 
     /**
      * @param args the command line arguments
@@ -71,6 +264,7 @@ public class Usuaris extends javax.swing.JFrame {
             java.util.logging.Logger.getLogger(Usuaris.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
+        //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
@@ -81,5 +275,11 @@ public class Usuaris extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnPauseResumeVideo;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JTable jTable1;
+    private javax.swing.JList<Usuari> lstUsuaris;
+    private javax.swing.JPanel pnlVideoPlayer;
     // End of variables declaration//GEN-END:variables
 }

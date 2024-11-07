@@ -193,6 +193,105 @@ public class DataAcces {
         return pendingAttempts;
     }
 
+    
+    public ArrayList<Usuari> getAllUsers() {
+        ArrayList<Usuari> users = new ArrayList<>();
+        String sql = "SELECT * FROM Usuaris ORDER BY Nom"; // Ordena por nombre, opcional
+
+        Connection connection = getConnection();
+        try {
+            PreparedStatement statement = connection.prepareStatement(sql);
+            ResultSet resultSet = statement.executeQuery();
+
+            while (resultSet.next()) {
+                Usuari user = new Usuari();
+                user.setId(resultSet.getInt("Id"));
+                user.setNom(resultSet.getString("Nom"));
+                user.setEmail(resultSet.getString("Email"));
+                user.setPasswordHash(resultSet.getString("PasswordHash"));
+                user.setInstructor(resultSet.getBoolean("IsInstructor"));
+                users.add(user);
+            }
+
+            statement.close();
+            connection.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(DataAcces.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return users;
+    }
+
+
+    public ArrayList<Intent> getAllAttemptsForUser(int userId) {
+        ArrayList<Intent> attempts = new ArrayList<>();
+            String sql ="SELECT i.Id, i.IdUsuari, i.IdExercici, i.Timestamp_Inici, i.Timestamp_Fi, i.Videofile, e.NomExercici\n" +
+                        "FROM Intents i\n" +
+                        "JOIN Exercicis e ON i.IdExercici = e.Id\n" +
+                        "WHERE i.IdUsuari = ? \n" +
+                        "ORDER BY i.Timestamp_Inici;";
+
+        Connection connection = getConnection();
+        try {
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setInt(1, userId);
+            ResultSet resultSet = statement.executeQuery();
+
+            while (resultSet.next()) {
+                Intent intent = new Intent();
+                intent.setId(resultSet.getInt("Id"));
+                intent.setIdUsuari(resultSet.getInt("IdUsuari"));
+                intent.setIdExercici(resultSet.getInt("IdExercici"));
+                intent.setTimestampInici(resultSet.getDate("Timestamp_Inici"));
+                intent.setTimestampFi(resultSet.getDate("Timestamp_Fi"));
+                intent.setVideofile(resultSet.getString("Videofile"));
+                intent.setExerciseName(resultSet.getString("NomExercici")); // Establecer el nombre del ejercicio
+                attempts.add(intent);
+            }
+
+            statement.close();
+            connection.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(DataAcces.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return attempts;
+    }
+    
+    public Intent getAttemptById(int attemptId) {
+        Intent intent = null;
+        String sql = "SELECT i.*, e.NomExercici FROM Intents i "
+                   + "JOIN Exercicis e ON i.IdExercici = e.Id "
+                   + "WHERE i.Id = ?";
+
+        Connection connection = getConnection();
+        try {
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setInt(1, attemptId);
+            ResultSet resultSet = statement.executeQuery();
+
+            if (resultSet.next()) {
+                intent = new Intent();
+                intent.setId(resultSet.getInt("Id"));
+                intent.setIdUsuari(resultSet.getInt("IdUsuari"));
+                intent.setIdExercici(resultSet.getInt("IdExercici"));
+                intent.setTimestampInici(resultSet.getDate("Timestamp_Inici"));
+                intent.setTimestampFi(resultSet.getDate("Timestamp_Fi"));
+                intent.setVideofile(resultSet.getString("Videofile"));
+                intent.setExerciseName(resultSet.getString("NomExercici"));
+            }
+
+            statement.close();
+            connection.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(DataAcces.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return intent;
+    }
+
+
+
 
 
     

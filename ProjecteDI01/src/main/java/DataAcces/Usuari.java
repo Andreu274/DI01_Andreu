@@ -63,6 +63,12 @@ public class Usuari {
     public void setInstructor(boolean Instructor) {
         this.Instructor = Instructor;
     }
+    
+    @Override
+    public String toString() {
+        return Nom; // Devuelve solo el nombre
+    }
+
 }
 
     
