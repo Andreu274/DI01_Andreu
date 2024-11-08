@@ -11,6 +11,7 @@ import java.awt.List;
 import java.io.File;
 import javax.swing.DefaultListModel;
 import javax.swing.JFileChooser;
+import main.MainFrame;
 import uk.co.caprica.vlcj.player.component.EmbeddedMediaPlayerComponent;
 
 /**
@@ -164,7 +165,8 @@ public class Intents extends javax.swing.JFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
         this.dispose();
-        
+        MainFrame mainFrame = new MainFrame(); 
+        mainFrame.setVisible(true);  
     }//GEN-LAST:event_jButton1ActionPerformed
 
     /**

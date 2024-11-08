@@ -68,7 +68,7 @@ public class MainWindow extends javax.swing.JFrame {
             }
         });
 
-        jLabel2.setText("Don't have account?");
+        jLabel2.setText("No tienes cuenta?");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
