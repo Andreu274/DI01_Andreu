@@ -127,8 +127,8 @@ public class LoginDialog extends javax.swing.JDialog {
                 if(result.verified){
                     JOptionPane.showMessageDialog(this, "Login correcte. Benvingut " + usuari.getNom() + "!");
                     
-                    Intents intentsFrame = new Intents(); 
-                    intentsFrame.setVisible(true);        
+                    MainFrame mainFrame = new MainFrame(); 
+                    mainFrame.setVisible(true);        
                     
                     this.dispose();
                     parentFrame.dispose();
