@@ -24,11 +24,9 @@ public class MainWindow extends javax.swing.JFrame {
      */
     public MainWindow() {
         initComponents();
-        
-        // Configuración de la ventana principal
         setResizable(false); // No redimensionable
-        setLocationRelativeTo(null); // Centrar la ventana en la pantalla
-        getContentPane().setLayout(null); // Cambiar a null layout para usar coordenadas fijas
+        setLocationRelativeTo(null); // Centrar la finestra a la pantalla
+        getContentPane().setLayout(null); // Cambiar a null layout para utilitzar coordenadas fixes
 
     }
     

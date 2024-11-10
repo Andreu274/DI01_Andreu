@@ -15,41 +15,54 @@ import main.MainFrame;
 import uk.co.caprica.vlcj.player.component.EmbeddedMediaPlayerComponent;
 
 /**
- *
- * @author rgtav
+ * Classe Intents és una finestra GUI que permet revisar intents pendents,
+ * reproduir vídeos associats, i tornar a la finestra principal.
+ * 
+ * Funcionalitats:
+ * - Carrega una llista d'intents pendents.
+ * - Reprodueix, pausa i reprèn vídeos.
+ * - Canvia entre la finestra actual i la finestra principal.
+ * 
+ * @autor Maqrok
  */
 public class Intents extends javax.swing.JFrame {
 
+    // Declaració de variables
+    private EmbeddedMediaPlayerComponent mediaPlayer; // Component per reproduir vídeos
+    JFileChooser fileChooser = new JFileChooser(); // Per seleccionar fitxers
+    private DataAcces da = new DataAcces(); // Accés a la base de dades
+    private boolean isPlaying = false; // Indica si el vídeo està en reproducció
     
-    private EmbeddedMediaPlayerComponent mediaPlayer;
-    JFileChooser fileChooser = new JFileChooser();
-    private DataAcces da = new DataAcces();
-    private boolean isPlaying = false;
     /**
-     * Creates new form MainJFrame
+     * Constructor de la classe Intents
+     * Configura la finestra, desactiva la redimensionabilitat, 
+     * centra la finestra i inicialitza els components.
      */
     public Intents() {
-        setResizable(false); // No redimensionable
-        setLocationRelativeTo(null); // Centrar la ventana en la pantalla
-        getContentPane().setLayout(null);
+        setResizable(false); // Evita que la finestra es pugui redimensionar
+        setLocationRelativeTo(null); // Centra la finestra en la pantalla
+        getContentPane().setLayout(null); // Disposició manual dels components
         initComponents();
-        mediaPlayer = new EmbeddedMediaPlayerComponent();
-        pnlVideoPlayer.add(mediaPlayer, BorderLayout.CENTER);
-        loadPendingIntents();
+        mediaPlayer = new EmbeddedMediaPlayerComponent(); // Inicialitza el reproductor de vídeo
+        pnlVideoPlayer.add(mediaPlayer, BorderLayout.CENTER); // Afegeix el reproductor al panell
+        loadPendingIntents(); // Carrega intents pendents
     }
     
+    /**
+     * Mètode que carrega la llista d'intents pendents per revisar.
+     * Afegeix cada intent a la llista gràfica lstVideos.
+     */
     private void loadPendingIntents() {
-        var getPendingAttempts = da.getPendingAttempts(); // Obtener intentos sin revisión
+        var getPendingAttempts = da.getPendingAttempts(); // Obté els intents pendents
         DefaultListModel<Intent> listModel = new DefaultListModel<>();
 
-        // Añadir cada intento a la lista con el nombre del ejercicio y el archivo de video
+        // Afegeix cada intent a la llista amb el nom de l'exercici i el fitxer de vídeo
         for (Intent intent : getPendingAttempts) {
             listModel.addElement(intent);
         }
 
-        lstVideos.setModel(listModel);
-        
-        lstVideos.setSelectedIndex(0);
+        lstVideos.setModel(listModel); // Configura el model per a la llista
+        lstVideos.setSelectedIndex(0); // Selecciona el primer element
     }
 
 
@@ -133,40 +146,34 @@ public class Intents extends javax.swing.JFrame {
 
     private void btnPauseResumeVideoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPauseResumeVideoActionPerformed
         // TODO add your handling code here:
-        
-        if(isPlaying)
-        {
-            mediaPlayer.mediaPlayer().controls().pause();
+        if(isPlaying) {
+            mediaPlayer.mediaPlayer().controls().pause(); // Pausa el vídeo
             isPlaying = false;
-            btnPauseResumeVideo.setText("Resume");
-        }
-        else 
-        {
-          mediaPlayer.mediaPlayer().controls().start();
-          isPlaying = true;
-          btnPauseResumeVideo.setText("Pause");
+            btnPauseResumeVideo.setText("Resume"); // Canvia el text del botó a 'Resume'
+        } else {
+            mediaPlayer.mediaPlayer().controls().start(); // Reprèn el vídeo
+            isPlaying = true;
+            btnPauseResumeVideo.setText("Pause"); // Canvia el text del botó a 'Pause'
         }
     }//GEN-LAST:event_btnPauseResumeVideoActionPerformed
 
     private void lstVideosValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_lstVideosValueChanged
-        if(evt.getValueIsAdjusting())
-        {
+        if(evt.getValueIsAdjusting()) {
             return;
         }
-        String videoPath = "src/main/resources/videos/videos/";
-        String videoFileAbsolutePath = videoPath + "\\" + lstVideos.getSelectedValue().getVideofile();
-        File videoFile = new File(videoFileAbsolutePath);
-        mediaPlayer.mediaPlayer().media().play(videoFile.getAbsolutePath());
-        mediaPlayer.mediaPlayer().controls().setRepeat(true);
+        String videoPath = "src/main/resources/videos/videos/"; // Ruta del vídeo
+        String videoFileAbsolutePath = videoPath + "\\" + lstVideos.getSelectedValue().getVideofile(); // Ruta completa
+        File videoFile = new File(videoFileAbsolutePath); // Crea un fitxer amb la ruta del vídeo
+        mediaPlayer.mediaPlayer().media().play(videoFile.getAbsolutePath()); // Reprodueix el vídeo
+        mediaPlayer.mediaPlayer().controls().setRepeat(true); // Activa la repetició
         isPlaying = true;
-
     }//GEN-LAST:event_lstVideosValueChanged
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-        this.dispose();
-        MainFrame mainFrame = new MainFrame(); 
-        mainFrame.setVisible(true);  
+        this.dispose(); // Tanca la finestra actual
+        MainFrame mainFrame = new MainFrame(); // Crea una nova instància de la finestra principal
+        mainFrame.setVisible(true); // Mostra la finestra principal
     }//GEN-LAST:event_jButton1ActionPerformed
 
     /**

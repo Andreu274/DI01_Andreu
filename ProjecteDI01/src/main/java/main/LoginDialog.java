@@ -169,14 +169,14 @@ public class LoginDialog extends javax.swing.JDialog {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        // Crear y mostrar el diálogo
+        // Crear i mostrar el diáleg
         SwingUtilities.invokeLater(() -> {
             JFrame parentFrame = new JFrame();
             parentFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            parentFrame.setVisible(true); // Asegúrate de que el marco esté visible
+            parentFrame.setVisible(true); 
 
             LoginDialog login = new LoginDialog(parentFrame, true);
-            login.setVisible(true); // Mostrar el diálogo
+            login.setVisible(true); // Mostrar el diáleg
         });
     }
 

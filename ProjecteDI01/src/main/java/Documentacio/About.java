@@ -13,14 +13,15 @@ import main.MainWindow;
 public class About extends javax.swing.JFrame {
 
     /**
-     * Creates new form About
+     * Constructor de la classe About
+     * Inicia els components de la GUI, desactiva la redimensionabilitat,
+     * i col·loca la finestra al centre de la pantalla.
      */
     public About() {
         initComponents();
-        setResizable(false); 
-        setLocationRelativeTo(null); 
-        getContentPane().setLayout(null); 
-
+        setResizable(false); // Evita que la finestra es pugui redimensionar
+        setLocationRelativeTo(null); // Centra la finestra en la pantalla
+        getContentPane().setLayout(null); // Desactiva el layout per defecte per a control manual
     }
 
     /**

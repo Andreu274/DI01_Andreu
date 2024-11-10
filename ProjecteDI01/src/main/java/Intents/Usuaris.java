@@ -18,66 +18,68 @@ import main.MainFrame;
 import uk.co.caprica.vlcj.player.component.EmbeddedMediaPlayerComponent;
 
 /**
- *
- * @author rgtav
+ * Classe JFrame que mostra la informació dels usuaris i permet la selecció i reproducció
+ * dels intents de vídeo associats a cada usuari. Inclou un reproductor de vídeo i 
+ * funcionalitats per pausar, reprendre i canviar de vídeo.
+ * * @autor Maqrok
  */
 public class Usuaris extends javax.swing.JFrame {
 
     
-    private EmbeddedMediaPlayerComponent mediaPlayer;
-    JFileChooser fileChooser = new JFileChooser();
-    private DataAcces da = new DataAcces();
-    private boolean isPlaying = false;
+    private EmbeddedMediaPlayerComponent mediaPlayer; // Component de reproductor de vídeo utilitzant VLCJ
+    JFileChooser fileChooser = new JFileChooser(); // Selector d’arxius per seleccionar vídeos (no implementat aquí)
+    private DataAcces da = new DataAcces(); // Objecte d'accés a dades per a operacions amb la base de dades
+    private boolean isPlaying = false; // Estat de reproducció del vídeo
+
     /**
-     * Creates new form MainJFrame
+     * Constructor: Inicialitza els components de la interfície i carrega la llista d'usuaris.
      */
     public Usuaris() {
-        setResizable(false); // No redimensionable
-        setLocationRelativeTo(null); // Centrar la ventana en la pantalla
-        getContentPane().setLayout(null);
-        initComponents();
-        mediaPlayer = new EmbeddedMediaPlayerComponent();
-        pnlVideoPlayer.add(mediaPlayer, BorderLayout.CENTER);
-        loadUsers();
-        addTableSelectionListener();
+        setResizable(false); // Finestra no redimensionable
+        setLocationRelativeTo(null); // Centrar la finestra a la pantalla
+        getContentPane().setLayout(null); // Sense gestor de disseny per posicionament personalitzat
+        initComponents(); // Inicialitza els components de Swing
+        mediaPlayer = new EmbeddedMediaPlayerComponent(); // Inicialitza el component del reproductor de vídeo
+        pnlVideoPlayer.add(mediaPlayer, BorderLayout.CENTER); // Afegeix el reproductor al panell de vídeo
+        loadUsers(); // Carrega la llista d'usuaris
+        addTableSelectionListener(); // Afegeix el listener per gestionar la selecció de la taula
+    
     }
     
     // Mètode per carregar usuaris en la llista
     private void loadUsers() {
-        ArrayList<Usuari> users = da.getAllUsers();
-        DefaultListModel<Usuari> listModel = new DefaultListModel<>();
+        ArrayList<Usuari> users = da.getAllUsers(); // Obté la llista d'usuaris de la base de dades
+        DefaultListModel<Usuari> listModel = new DefaultListModel<>(); // Model per a la llista d'usuaris
 
+        // Afegeix cada usuari al model de la llista
         for (Usuari user : users) {
             listModel.addElement(user);
         }
 
-        lstUsuaris.setModel(listModel);
-        lstUsuaris.setSelectedIndex(0); 
+        lstUsuaris.setModel(listModel); // Mostra els usuaris a lstUsuaris
+        lstUsuaris.setSelectedIndex(0); // Selecciona el primer usuari per defecte
     }
 
 
     private void loadUserAttempts(Usuari selectedUser) {
-        ArrayList<Intent> attempts = da.getAllAttemptsForUser(selectedUser.getId());
+        ArrayList<Intent> attempts = da.getAllAttemptsForUser(selectedUser.getId()); // Obté els intents
 
-        // Crear el formateador de fecha
-        SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-
-        // Model per a la taula amb les columnes requerides (ID, Nom Exercici, TimestampInici)
+        SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); // Format per a la data
         DefaultTableModel tableModel = new DefaultTableModel(new Object[]{"ID", "Nom Exercici", "TimestampInici"}, 0);
 
+        // Afegeix cada intent a la taula
         for (Intent intent : attempts) {
             String formattedDate = dateFormatter.format(intent.getTimestampInici()); 
-            // Añadir los datos a la tabla sin incluir el nombre del video
             tableModel.addRow(new Object[]{intent.getId(), intent.getExerciseName(), formattedDate});
         }
 
-        jTable1.setModel(tableModel);
+        jTable1.setModel(tableModel); // Configura el model de la taula amb els intents
 
-        // Seleccionar y cargar el primer intento si existe
+        // Carrega automàticament el primer intent si està disponible
         if (!attempts.isEmpty()) {
             String videoFile = attempts.get(0).getVideofile();
-            loadVideo(videoFile);  // Cargar el primer video automáticamente
-            jTable1.setRowSelectionInterval(0, 0);  // Seleccionar el primer intento
+            loadVideo(videoFile);
+            jTable1.setRowSelectionInterval(0, 0); // Selecciona la primera fila de la taula
         }
     }
 
@@ -85,12 +87,11 @@ public class Usuaris extends javax.swing.JFrame {
     
     // Mètode per carregar i reproduir un vídeo
     private void loadVideo(String videoFileName) {
-        String videoPath = "src/main/resources/videos/videos/";
+        String videoPath = "src/main/resources/videos/videos/"; // Ruta als vídeos
         String videoFileAbsolutePath = videoPath + videoFileName;
-        mediaPlayer.mediaPlayer().media().play(videoFileAbsolutePath);
-        mediaPlayer.mediaPlayer().controls().setRepeat(true);
+        mediaPlayer.mediaPlayer().media().play(videoFileAbsolutePath); // Reprodueix el fitxer de vídeo
+        mediaPlayer.mediaPlayer().controls().setRepeat(true); // Reprodueix en bucle
         isPlaying = true;
-        
     }
     
     // Esdeveniment per seleccionar un usuari i carregar els seus intents
@@ -259,12 +260,6 @@ public class Usuaris extends javax.swing.JFrame {
             }
         });
     }
-
-
-
-
-
-
 
     /**
      * @param args the command line arguments

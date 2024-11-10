@@ -150,6 +150,7 @@ public class RegisterDialog extends javax.swing.JDialog {
 
     private void BotonRegistreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonRegistreActionPerformed
         // TODO add your handling code here:
+        // Crear un nou objecte Usuari per emmagatzemar la informació del nou usuari
         Usuari nouUsuari = new Usuari();
         nouUsuari.setNom(NomField.getText());
         nouUsuari.setEmail(EmailField.getText());
@@ -169,10 +170,6 @@ public class RegisterDialog extends javax.swing.JDialog {
         // TODO add your handling code here:
         this.dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
-
-    
-    
-   
     
     /**
      * @param args the command line arguments
